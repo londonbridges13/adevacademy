@@ -1,0 +1,3 @@
+class ContentWorkerController < ApplicationController
+
+end
