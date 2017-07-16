@@ -1,3 +1,5 @@
+require "open-uri"
+
 module ResourcesHelper
 
   def test_resource(resource)
@@ -101,7 +103,7 @@ module ResourcesHelper
 
       x_days = 30
       # Grab content from the last 30 days
-      articles = topic.articles.where('article_date > ?', x_days.days.ago)
+      articles = topic.articles.where('article_date > ?', x_days.days.ago).where(:publish_it => true)
 
       potential_channels = []
       articles.each do |a|
@@ -126,6 +128,89 @@ module ResourcesHelper
       end
 
     end
+
+
+
+
+# For Adding Youtube Channels
+
+  def add_channel_by_url(url)
+    if url.include? "youtube"
+      add_youtube_channel_by(url)
+    else
+
+    end
+  end
+
+
+  def add_youtube_channel_by(url)
+    channel = Resource.new
+    channel.about_url = "#{url}/about"
+    channel.resource_type = "video"
+    # get title, feed url, etc
+    xml = Faraday.get(url).body.force_encoding('utf-8')
+
+    # xml = Feedjira::Feed.parse url
+
+    copy_xml = "#{xml}" # for title
+    copy_xml_2 = "#{xml}" # for feed url and channel_id
+    copy_xml_3 = "#{xml}" # for photo (use Linkobject)
+    copy_xml_4 = "#{xml}" # for description
+
+    # get title
+    title = "title"
+    channel.title = title
+    # title_index = copy_xml.index()
+
+
+    photo_index = copy_xml_3.index("channel-header-profile-image") # still got trash between
+    # clear to photo_index
+    copy_xml_3 = copy_xml_3[photo_index...copy_xml_3.length]
+    # remove 'src='
+    src_index = copy_xml_3.index("src=\"")
+    copy_xml_3 = copy_xml_3[src_index + 5...copy_xml_3.length]
+    ending_src_index = copy_xml_3.index("\"")
+
+    # remove all after the end of url
+    photo_url = copy_xml_3[0...ending_src_index]
+    channel.image = open("#{photo_url}")
+
+
+
+    # get feed url (channel_id)
+    if url.include? "channel"
+      channel_id_index = url.index("channel/")
+      channel_id = url[channel_id_index + 8 ...url.length]
+      feed_url = "https://www.youtube.com/feeds/videos.xml?channel_id=#{channel_id}"
+      channel.resource_url = feed_url
+    else
+      channel_id_index = copy_xml_2.index("channel_id=")
+      copy_xml_2 = copy_xml_2[channel_id_index + 11...copy_xml_2.length]
+      ending_src_index = copy_xml_2.index("\"")
+      channel_id = copy_xml_2[0...ending_src_index]
+
+      feed_url = "https://www.youtube.com/feeds/videos.xml?channel_id=#{channel_id}"
+      channel.resource_url = feed_url
+    end
+
+    #get title
+    feed = Feedjira::Feed.fetch_and_parse feed_url
+    channel.title = feed.title
+
+    desc_index = copy_xml_4.index("\"description\"")
+    copy_xml_4 = copy_xml_4[desc_index ...copy_xml_4.length]
+    content_index = copy_xml_4.index("content")
+    copy_xml_4 = copy_xml_4[content_index + 9...copy_xml_4.length]
+
+    ending_src_index = copy_xml_4.index("\"")
+    description = copy_xml_4[0...ending_src_index]
+    description.gsub! "&#39;", "'"
+    channel.desc = description
+
+    channel.save
+    return channel
+
+  end
 
 
 
