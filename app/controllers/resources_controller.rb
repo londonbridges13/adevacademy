@@ -9,7 +9,7 @@ class ResourcesController < ApplicationController
   # GET /resources.json
   def index
     @resources = Resource.all
-    # set_urls # add the urls of channels for fast adds
+    set_urls # add the urls of channels for fast adds
   end
 
   def set_urls
@@ -39,7 +39,7 @@ class ResourcesController < ApplicationController
     urls.push "https://www.youtube.com/user/AskADev"
     urls.push "https://www.youtube.com/channel/UCZHkx_OyRXHb1D3XTqOidRw"
     urls.push "https://www.youtube.com/user/sentdex"
-    urls.push
+    # urls.push
 
     urls.each do |u|
       get_channel_by_url u
