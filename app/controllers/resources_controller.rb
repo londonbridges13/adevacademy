@@ -9,36 +9,12 @@ class ResourcesController < ApplicationController
   # GET /resources.json
   def index
     @resources = Resource.all
-    set_urls # add the urls of channels for fast adds
+    # set_urls # add the urls of channels for fast adds
   end
 
   def set_urls
     urls = []
-    urls.push "https://www.youtube.com/user/Archetapp"
-    urls.push "https://www.youtube.com/channel/UCuP2vJ6kRutQBfRmdcI92mA"
-    urls.push "https://www.youtube.com/channel/UCysEngjfeIYapEER9K8aikw"
-    urls.push "https://www.youtube.com/channel/UChH6WbyYeX0INJjrK2-6WSg"
-    urls.push "https://www.youtube.com/channel/UCvPFGq6luCqAVGiFpzTvkIA"
-    urls.push "https://www.youtube.com/user/CodeWithChris"
-    urls.push "https://www.youtube.com/user/GeekyLemon"
-    urls.push "https://www.youtube.com/channel/UC-d1NWv5IWtIkfH47ux4dWA"
-    urls.push "https://www.youtube.com/user/jsonmez"
-    urls.push "https://www.youtube.com/user/DevTipsForDesigners"
-    urls.push "https://www.youtube.com/user/mackenziechild"
-    urls.push "https://www.youtube.com/user/learncodeacademy"
-    urls.push "https://www.youtube.com/user/derekbanas"
-    urls.push "https://www.youtube.com/user/TheSkoolRocks"
-    urls.push "https://www.youtube.com/user/thenewboston"
-    urls.push "https://www.youtube.com/channel/UCIQmhQxCvLHRr3Beku77tww"
-    urls.push "https://www.youtube.com/user/RailscastsReloaded"
-    urls.push "https://www.youtube.com/user/codemynet"
-    urls.push "https://www.youtube.com/user/PaulSolt"
-    urls.push "https://www.youtube.com/user/schafer5"
-    urls.push "https://www.youtube.com/user/elithecomputerguy"
-    urls.push "https://www.youtube.com/user/killerphp"
-    urls.push "https://www.youtube.com/user/AskADev"
-    urls.push "https://www.youtube.com/channel/UCZHkx_OyRXHb1D3XTqOidRw"
-    urls.push "https://www.youtube.com/user/sentdex"
+    urls.push 
     # urls.push
 
     urls.each do |u|
